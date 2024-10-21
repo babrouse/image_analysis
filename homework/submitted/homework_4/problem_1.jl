@@ -32,7 +32,8 @@ amp_sin = fast_four(sin_array);
 ori_plt = heatmap(amp_ori, 
                   title="amplitude (original)", 
                   color=:grays, 
-                  axis=false
+                  axis=false, 
+                  framestyle=:box
                   );
 
 sin_plt = heatmap(amp_sin, 
