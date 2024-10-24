@@ -48,10 +48,12 @@ worm_orig = load("images/fetter_Celegans_cellfig10.jpg")
 N = 101;
 λ = 0.53;
 aper = 0.7;
-scale = 0.1;
+scale = 0.01;
 
 worm_psf = psf(N, λ, aper, scale)
 
 
-worm_blur = imfilter(worm_orig, Kernel.worm_psf)
+worm_blur = imfilter(worm_orig, worm_psf)
 display(worm_blur)
+
+save("images/worm_blur.png", worm_blur)

@@ -6,7 +6,6 @@ using Images;
 using Plots;
 using StatsBase, LinearAlgebra, MAT;
 
-plotly()
 
 # Functions
 function int_check(img, row, col)
@@ -106,6 +105,8 @@ no_noise_histo = histogram(no_noise_vec,
                            bins=50, 
                            color=:purple)
 
+savefig(no_noise_histo, "images/no_noise_histo.png")
+
 noise_histo = histogram(noise_vec, 
                         title="non-noise histo", 
                         xlabel="intensity", 
@@ -113,6 +114,11 @@ noise_histo = histogram(noise_vec,
                         legend=false, 
                         bins=50, 
                         color=:orange)
+
+savefig(noise_histo, "images/noise_histo.png")
+
+
+plotly()
 
 
 # I'm going to try to blur out the background then subtract it from the image

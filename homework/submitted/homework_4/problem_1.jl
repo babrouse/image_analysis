@@ -42,4 +42,7 @@ sin_plt = heatmap(amp_sin,
                   axis=false
                   );
 
-plot(ori_plt, sin_plt, layout=(2, 1), size=(600, 800))
+double_amp_plt = plot(ori_plt, sin_plt, layout=(2, 1), size=(600, 800))
+
+savefig(ori_plt, "images/amp_ori.png")
+savefig(sin_plt, "images/amp_sin.png")
