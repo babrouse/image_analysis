@@ -122,7 +122,7 @@ plotly()
 
 
 # I'm going to try to blur out the background then subtract it from the image
-blurred_background = imfilter(emit_orig, Kernel.gaussian(15))
+blurred_background = imfilter(emit_orig, Kernel.gaussian(69))
 emit_sub_bg = emit_orig .- blurred_background
 
 surface(emit_sub_bg, title="bg subtracted img", color=:inferno, size=(800, 600))

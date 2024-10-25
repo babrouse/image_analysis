@@ -20,7 +20,7 @@ end;
 
 function psf(N::Int, λ::Float64, aper::Float64, scale::Float64)
     # Make a grid of distances from the center of an NxN matrix
-    center = (N + 1) / 2 # calc the center
+    center = (N - 1) / 2 # calc the center
     r = zeros(N, N) # initiate a matrix of distances from center
 
     # for distances from the center, calculated the euclidean distance
