@@ -91,4 +91,5 @@ yc = 0.3;
 
 noisy_psf_50_1 = psf_pixelization_noisy(N, λ🟢, aper₁, cam_scale, fine_scale, 50, xc, yc)
 
-noisy_psf_map_50_1 = heatmap(noisy_psf_50_1, title="λ=0.5μm, NA=0.9, N_photon=50, xc=3, yc=3")
+noisy_psf_map_50_1 = heatmap(noisy_psf_50_1, title="λ=0.5μm, NA=0.9, N_photon=50, xc=0.2, yc=0.3")
+savefig(noisy_psf_map_50_1, "images/pixel_psf_1.png")

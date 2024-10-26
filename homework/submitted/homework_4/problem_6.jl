@@ -87,9 +87,9 @@ function psf_pixelization_noisy(N::Int,
     block_size = Int(cam_scale / fine_scale) # define the block size
 
     for i=1:1:N, j=1:1:N # iterate through using block sizes
-    fine_i = ((i - 1) * block_size + 1):(i * block_size)
-    fine_j = ((j - 1) * block_size + 1):(j * block_size)
-    coarse_psf[i, j] = sum(fine_psf[fine_i, fine_j])
+        fine_i = ((i - 1) * block_size + 1):(i * block_size)
+        fine_j = ((j - 1) * block_size + 1):(j * block_size)
+        coarse_psf[i, j] = sum(fine_psf[fine_i, fine_j])
     end
 
     # scale and add noise for part (b)
