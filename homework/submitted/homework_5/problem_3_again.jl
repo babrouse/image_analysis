@@ -166,13 +166,14 @@ rms_error = sqrt(mean((x_cent_values .- x0).^2 + (y_cent_values .- y0).^2))
 println("RMS Error of centroid localization: ", rms_error)
 
 # plot this histogram
-rms_histo = histogram(x_cent_values .* camera_scale, 
+rms_histo = histogram(x_cent_values, 
                     bins=37, 
                     title="calculated x_centroid (1000 images)", 
                     xlabel="x position", 
                     ylabel="frequency", 
                     legend=false, 
-                    color=:purple)
+                    color=:purple,
+                    size=(800,600))
 
 # RMS error: 0.0742
 
@@ -221,7 +222,7 @@ end;
 rms_photon_plt = plot(Nₚ_values, rms_errors, 
                       xscale=:log10, yscale=:log10, 
                       xlabel="Nₚ", ylabel="RMS error (pixels)", 
-                      title="RMS error vs Nₚ", legend=false)
+                      title="RMS error vs Nₚ", legend=false, size=(800, 600))
 
 
                       
@@ -259,7 +260,7 @@ for (Nₚ, x0) in keys(Δx_dict)
     hist = histogram(Δx, bins=50, 
                      title="Δx histo (Nₚ=$Nₚ, x0=$x0)", 
                     xlabel="Δx (pixels)", ylabel="frequency", legend=false, 
-                    xlims=[-0.4, 0.4])
+                    xlims=[-0.4, 0.4], size=(800, 600), linewidth=0, color=:purple)
     display(hist)
 end
 
@@ -300,7 +301,7 @@ for p in p_values
     push!(mean_Δx_noisy, mean(Δx_noisy))
 end
 
-noise_rel_plots = plot(p_values, mean_Δx_no_noise, label="no noise", xlabel="True position p (pixels)", ylabel="Mean Δx (pixels)")
+noise_rel_plots = plot(p_values, mean_Δx_no_noise, label="no noise", xlabel="True position p (pixels)", ylabel="Mean Δx (pixels)", size=(800, 600))
 plot!(p_values, mean_Δx_noisy, label="with noise (B=100)")
 
 
