@@ -129,14 +129,14 @@ end
 # In order: Number of images, coarse grid size, fine grid size
 # scale, wavelength, numerical aperture, photon number, mean
 M = 100;
-N = 7;
+N = 15;
 fine_scale = 0.01;
 scale = 0.1;
 λ = 0.510;
 aper = 0.9;
-Nₚ = 500;
+Nₚ = 50000;
 bg = 10.0;
-yc, xc = 0.2, 0.0;
+yc, xc = 0.0, 0.0;
 
 sim_img = img_sim(N, λ, aper, scale, fine_scale, Nₚ, xc, yc, bg)
 heatmap(sim_img, color=:inferno)
@@ -149,7 +149,7 @@ cent_calc(sim_img)
 centers, centroids, x_list = [], [], []
 
 for i = 1:1:M
-    img = sim_img()
+    img = img_sim(N, λ, aper, scale, fine_scalee, Nₚ, xc, yc, bg)
 end
 
 #= Tested the centroid calc multiple times with and without noise and it seems to be consistent.
@@ -162,7 +162,7 @@ end
 
 
 
-    x=19;
+x=19;
 
 
 #####################################
