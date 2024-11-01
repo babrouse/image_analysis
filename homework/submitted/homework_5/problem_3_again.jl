@@ -97,7 +97,7 @@ camera_scale = 0.1;     # camera scale (μm / px)
 fine_scale = 0.01;      # fine grid scale (μm / px)
 Nₚ = 500;               # number of photons
 bg = 10;                # bg noise factor
-xc, yc = 0.1, 0.1;      # offset in μm
+xc, yc = 0.0, 0.0;      # offset in μm
 
 final_psf = psf(N, λ, NA, camera_scale, fine_scale, Nₚ, xc, yc, bg)
 heatmap(final_psf, color=:inferno)
