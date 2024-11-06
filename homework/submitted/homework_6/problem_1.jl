@@ -57,10 +57,23 @@ scaled_stack = round.(UInt8, scaled_stack)
 heatmap(scaled_stack[:, :, 37], color=:inferno, title="frame 37 (scaled)", size=(800, 600))
 # looks to highlight some details
 
-save("homework/submitted/homework_6/images/cilia_sub_rescale_Bret.tiff", scaled_stack)
+save("homework/submitted/homework_6/images/cilia_sub_rescale_Bret.tif", scaled_stack)
 
 
 # Homework 6 Problem 1c
 std_img = std(img_stack, dims=3)
 std_heat = heatmap(std_img[:, :, 1], color=:viridis, title="stdev of stack in time", size=(800, 600))
-savefig("homework/submitted/homework_6/images/std_img.png", std_heat)
+savefig(std_heat, "homework/submitted/homework_6/images/std_img.png")
+
+
+# Homework 6 Problem 1d
+kernel = Kernel.gaussian(2)
+
+filtered_stack = similar(scaled_stack)
+
+for i = 1:1:size(scaled_stack, 3)
+    filtered_frame = imfilter(scaled_stack[:, :, i], kernel, "replicate")
+    filtered_stack[:, :, i] = clamp.(round.(Int, filtered_frame), 0, 255) |> x -> convert(Array{UInt8, 2}, x)
+end
+
+save("homework/submitted/homework_6/images/test.tif", filtered_stack)
