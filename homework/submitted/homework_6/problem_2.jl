@@ -2,7 +2,7 @@
 # Bret A. Brouse Jr. - 11.6.2024
 
 # Preload packages
-using Random, Distributions;
+using Random, Distributions, SpecialFunctions;
 using Optim;
 using Plots;
 
@@ -71,6 +71,8 @@ bs = range(0.1, 10.0, length=M)
 obj_grid = [mle_obj([x0, b], x, y) for x0 in x₀s, b in bs]
 
 surface(x₀s, bs, obj_grid, xlabel="x₀", ylabel="b", title="Obj Function Landscape", size=(800, 600))
+# this does not come out in the way I'd expect and I'm unsure why but need to move on
+# the estimation works though!!!
 
 
 
@@ -184,3 +186,85 @@ fine_scale = 0.01;
 bg = 10;
 M = 100;
 
+# rando numbers between -0.05 and 0.05
+x_poss = rand(M) .* 0.1 .- 0.05
+y_poss = rand(M) .* 0.1 .- 0.05
+
+# generate sim images
+sim_imgs = []
+
+for i = 1:1:M
+    push!(sim_imgs, psf(N, λ, NA, camera_scale, fine_scale, Nₚ, x_poss[i], y_poss[i], bg))
+end
+
+heatmap(sim_imgs[37]) # check to make sure we have images!!!!
+
+
+# measure times for centroid localization
+cents = []
+@time begin
+    for i = 1:1:length(sim_imgs)
+        push!(cents, calc_centroid(sim_imgs[i]))
+    end
+end
+
+# Roughly 0.12ms
+
+
+
+######################################################
+# Problem 4
+# Starting over with fresh functions to be safe
+
+function gauss_psf(x, y, A₀, xc, yc, σ, B)
+    A = A₀ * exp(-((x - xc)^2 + (y - yc)^2) / (2 * σ^2)) + B
+
+    return A
+end;
+
+function neg_log(params, img, x_grid, y_grid)
+    A₀, xc, yc, σ, B = params
+    
+    # calculate expected intensities for each pixel
+    exp_Is = []
+    exp_Is = gauss_psf.(x_grid, y_grid, A₀, xc, yc, σ, B)
+    # for i = 1:1:length(x_grid), j = 1:1:length(y_grid)
+    #     push!(exp_Is, gauss_psf(x_grid[i], y_grid[j], A₀, xc, yc, σ, B))
+    # end
+
+    # negative log-likelihood assuming Poisson noise
+    log_likelihood = sum(exp_Is .- img .* log.(exp_Is))
+
+    return log_likelihood
+end;
+
+function mle_localization(img)
+    # initial guess
+    init_params = [maximum(img), size(img, 1) / 2, size(img, 2) / 2, 1.0, minimum(img)]
+    #=  maximum(img) - guess for A₀ is maximum of the image
+        sizes - reasonable to guess center
+        1.0 - suppose that the standard deviation could be 1.0
+        minimum(img) - guess for B which is background noise =#
+
+    # create dang grids
+    rows, cols = size(img)
+    x_grid = repeat(collect(1:cols)', rows, 1)
+    y_grid = repeat(collect(1:rows), 1, cols)
+
+    # run optimization using Optim packagee
+    result = optimize(params -> neg_log(params, img, x_grid, y_grid), init_params)
+
+    # extract the optimized parameters
+    A₀, xc, yc, σ, B = Optim.minimizer(result)
+
+    return (xc, yc, A₀, σ, B)
+end;
+
+# we already have simulated images so lets try the mle_localization on
+# that array so that the comparison is logical
+mle_results = []
+@time begin
+    for i = 1:1:length(sim_imgs)
+        push!(mle_results, mle_localization(sim_imgs[i]))
+    end
+end
