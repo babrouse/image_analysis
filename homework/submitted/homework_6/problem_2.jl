@@ -56,10 +56,14 @@ println("Estimated x₀: ", x₀_est)
 println("Estimated b: ", b_est)
 
 # Plot simulated y data with true and estimated models
-true_est_plt = plot(x, y, seriestype=:scatter, label="observed y", legend=:topright)
+true_est_plt = plot(x, y, seriestype=:scatter, label="observed y", legend=:topright, 
+                    xlabel="x", ylabel="y", title="data compared with true model and simulated model", 
+                    size=(800, 600))
 plot!(true_est_plt, x, A_calc(x, x₀, b), label="true model", lw=2)
 plot!(true_est_plt, x, A_calc(x, x₀_est, b_est), label="estimated model", lw=2, linestyle=:dash)
 
+# savefig(true_est_plt, "homework/submitted/homework_6/images/2c_plot.png")
+# for some reason savefig doesn't work here so I screenshot it
 
 ###########################
 # Problem 2d
@@ -233,7 +237,9 @@ function neg_log(params, img, x_grid, y_grid)
     # end
 
     # negative log-likelihood assuming Poisson noise
-    log_likelihood = sum(exp_Is .- img .* log.(exp_Is))
+    # log_likelihood = sum(exp_Is .- img .* log.(exp_Is .+ 1e-10))
+    log_likelihood = sum(exp_Is .- img .* log.(max.(exp_Is, 1e-10) .+ 1e-10))
+
 
     return log_likelihood
 end;
@@ -268,3 +274,82 @@ mle_results = []
         push!(mle_results, mle_localization(sim_imgs[i]))
     end
 end
+
+
+
+######################################################
+# Problem 4c
+
+# New parameters
+N = 7;
+λ = 0.510;
+NA = 0.9;
+Nₚ = 1000;
+camera_scale = 0.1;
+fine_scale = 0.01;
+bg = 0;
+M = 100;
+
+# New array for emitter positions
+pos = [(0.0, 0.0), (0.3, 0.0), (-0.3, 0.0)]
+
+# Store results for each position
+results = Dict{Tuple{Float64, Float64}, Vector{Float64}}()
+
+# Loop over each emitter position
+for (x0, y0) in pos
+    delta_xs = Float64[]
+    
+    # Simulate images and apply MLE localization
+    for i = 1:1:M
+        img = psf(N, λ, NA, camera_scale, fine_scale, Nₚ, x0, y0, bg)
+        xc, yc, _, _, _ = mle_localization(img)
+        
+        # Calculate localization error in x
+        push!(delta_xs, xc - x0)
+    end
+    
+    # Store the error values for this position
+    results[(x0, y0)] = delta_xs
+end
+
+for (pos, delta_xs) in results
+    histo = histogram(delta_xs, bins=90, 
+                xlabel="Δx (pixels)", 
+                ylabel="frequency", 
+                title="histogram of Δx for position $(pos)", 
+                label=false)
+    display(current())
+end
+
+
+######################################################
+# Problem 4d
+
+# Diagonal positions from (-0.5, -0.5) to (0.5, 0.5) in steps of 0.1
+positions = [(p, p) for p in -0.5:0.1:0.5]
+mean_deltas = Float64[]
+
+# loop across the diagonal
+for (x0, y0) in positions
+    delta_xs = Float64[]
+    
+    # Simulate M images for the current position and calculate localization error
+    for i = 1:1:M
+        img = psf(N, λ, NA, camera_scale, fine_scale, Nₚ, x0, y0, bg)
+        xc, yc, _, _, _ = mle_localization(img)
+        
+        # Calculate localization error in x
+        push!(delta_xs, xc - x0)
+    end
+    
+    # Calculate and store the mean Δx for this position
+    push!(mean_deltas, mean(delta_xs))
+end
+
+p_values = [pos[1] for pos in positions]
+
+last_plot = plot(p_values, mean_deltas, xlabel="position (p)", ylabel="mean Δx (pixels)",
+     title="mean Δx vs. position", marker=:o, legend=false)
+
+savefig(last_plot, "homework/submitted/homework_6/images/last_plot.png")

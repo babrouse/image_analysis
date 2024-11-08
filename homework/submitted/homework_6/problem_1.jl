@@ -21,7 +21,8 @@ heatmap(img_stack[:, :, 37], color=:inferno, title="frame 37", size=(800, 600))
 
 # Calculate median across temporal dimension
 med_img = median(img_stack, dims=3)
-heatmap(med_img[:, :, 1], color=:viridis, title="median img")
+med_img_heat = heatmap(med_img[:, :, 1], color=:viridis, title="median img")
+save("homework/submitted/homework_6/images/median_img.png", med_img_heat)
 # I think median img makes sense since it looks pretty much like every other frame with some
 # goofy stuff going on with the numbers
 
@@ -42,7 +43,7 @@ pixel_histo = histogram(stack_vec,
                         color=:purple, 
                         legend=false, 
                         size=(800, 600))
-
+savefig(pixel_histo, "homework/submitted/homework_6/images/pixel_histo.png")
 # As expected and hinted in the problem, wee see most of our remaining values arre sitting around zero
 
 
