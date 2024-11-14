@@ -1,7 +1,7 @@
      #### Homework 7, Problem 1
      ## Bret A. Brouse Jr. - 11.13.2024
 
-     # Preload packages
+# Preload packages
 using Random, Distributions, SpecialFunctions;
 using Optim;
 using Plots;
@@ -194,33 +194,22 @@ sim_imgs = [];
 Δxs, Δys = [], [];
 rms_errors = [];
 
-test_img = psf(N, λ, NA, camera_scale, fine_scale, Nₚ, x_poss[1], y_poss[1], bg)
-heatmap(test_img)
-x_test, y_test, _, _, _ = mle_localization(test_img)
-x_test -= 3.5
-y_test -= 3.5
-
-delta_x = (x_test - x_poss[1])
-delta_y = (y_test - y_poss[1])
-
-x_poss[1]
-
-size(test_img, 1)
-
-
 
 #= generate an image using the psf function, extract the center using mle_local. function,
     push this to the delta x array for plotting =#
 for i = 1:1:M
     img = psf(N, λ, NA, camera_scale, fine_scale, Nₚ, x_poss[i], y_poss[i], bg)
     xc, yc, _, _, _ = mle_localization(img)
-    Δx = xc - x_poss[i]
-    Δy = yc - y_poss[i]
+    xc -= 3.5
+    yc -= 3.5
+
+    Δx = 0.01*(xc - x_poss[i])
+    Δy = 0.01*(yc - y_poss[i])
 
     push!(sim_imgs, img)
     push!(Δxs, Δx)
     push!(Δys, Δy)
-    push!(rms_errors, 0.1*rms_error(x_poss[i], xc, y_poss[i], yc))
+    push!(rms_errors, rms_error(x_poss[i], xc, y_poss[i], yc))
 end;
 
 plt_1a = scatter(x_poss, Δxs, 
@@ -232,4 +221,18 @@ plt_1a = scatter(x_poss, Δxs,
                  size=(800, 600)
 )
 
-heatmap(sim_imgs[37])
+
+
+
+
+########################
+# GRAVEYARD
+########################
+test_img = psf(N, λ, NA, camera_scale, fine_scale, Nₚ, x_poss[1], y_poss[1], bg)
+heatmap(test_img)
+x_test, y_test, _, _, _ = mle_localization(test_img)
+x_test -= 3.5
+y_test -= 3.5
+
+delta_x = 0.1*(x_test - x_poss[1])
+delta_y = 0.1*(y_test - y_poss[1])
