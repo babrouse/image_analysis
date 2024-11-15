@@ -313,15 +313,7 @@ guess = [0, 0, 100, 1, 0]
 #################################
 # gaussian psf function is written above with other functions
 
-# # parameter change
-# N = 35
-# sigma = 7
-
-# psf = gauss_psf(N, sigma)
-# plt.imshow(psf)
-# plt.title("gaussian psf (sigma=7, N=35")
-# plt.colorbar()
-# plt.show()
+# 
 
 
 
@@ -329,15 +321,15 @@ guess = [0, 0, 100, 1, 0]
 #################################
 # 3b
 #################################
-N = 35
-sigma = 5
+# N = 35
+# sigma = 5
 
-img = io.imread("mouse_glial_cells_RBurdan_crop.png")
-io.imshow(img)
+# img = io.imread("mouse_glial_cells_RBurdan_crop.png")
+# io.imshow(img)
 
-psf = gauss_psf(N, sigma)
-gaussed_img = convolve(img, psf)
-noisy_gauss_img = np.clip(np.random.poisson(gaussed_img), 0, 255).astype(np.uint8)
+# psf = gauss_psf(N, sigma)
+# gaussed_img = convolve(img, psf)
+# noisy_gauss_img = np.clip(np.random.poisson(gaussed_img), 0, 255).astype(np.uint8)
 
 # plt.imshow(noisy_gauss_img, cmap='gray')
 # plt.title("noisy, blurry image!")
@@ -363,14 +355,13 @@ noisy_gauss_img = np.clip(np.random.poisson(gaussed_img), 0, 255).astype(np.uint
 # clipped_decon_img = (255 * (clipped_decon_img - np.min(clipped_decon_img)) / 
 #                             (np.max(clipped_decon_img) - np.min(clipped_decon_img))).astype(np.uint8)
 
-# # plt.imshow(clipped_decon_img, cmap='gray')
+# plt.imshow(clipped_decon_img, cmap='gray')
 
 # clipped_img = img[clip:-clip, clip:-clip]
 
 # rmse_decon_img = calc_img_rmse(img, decon_img)
 # rmse_decon_img_clipped = calc_img_rmse(clipped_img, clipped_decon_img)
 
-# # plt.imshow(clipped_decon_img, cmap='gray')
 
 # print("deconvolved rmse prior to clipping: ", rmse_decon_img)
 # print("deconvolved rmse after clipping: ", rmse_decon_img_clipped)
@@ -380,30 +371,30 @@ noisy_gauss_img = np.clip(np.random.poisson(gaussed_img), 0, 255).astype(np.uint
 #################################
 # 3d
 #################################
-iter_list = np.arange(5, 205, 10)
+# iter_list = np.arange(5, 205, 10)
 
-rmses, imgs = [], []
+# rmses, imgs = [], []
 
-clip = 50
+# clip = 50
 
-for iters in iter_list:
-    clipped_img = img[clip:-clip, clip:-clip]
+# for iters in iter_list:
+#     clipped_img = img[clip:-clip, clip:-clip]
     
-    decon_img = restoration.richardson_lucy(noisy_gauss_img, psf, iters, clip=False)
+#     decon_img = restoration.richardson_lucy(noisy_gauss_img, psf, iters, clip=False)
     
-    clipped_decon_img = decon_img[clip:-clip, clip:-clip]
-    clipped_decon_img = (255 * (clipped_decon_img - np.min(clipped_decon_img)) / 
-                                (np.max(clipped_decon_img) - np.min(clipped_decon_img))).astype(np.uint8)
+#     clipped_decon_img = decon_img[clip:-clip, clip:-clip]
+#     clipped_decon_img = (255 * (clipped_decon_img - np.min(clipped_decon_img)) / 
+#                                 (np.max(clipped_decon_img) - np.min(clipped_decon_img))).astype(np.uint8)
     
-    rmse = calc_img_rmse(clipped_img, clipped_decon_img)
+#     rmse = calc_img_rmse(clipped_img, clipped_decon_img)
     
-    rmses.append(rmse)
-    imgs.append(clipped_decon_img)
+#     rmses.append(rmse)
+#     imgs.append(clipped_decon_img)
     
-plt.clf()
-plt.plot(iter_list, rmses)
-plt.xlabel("iterations")
-plt.ylabel("rms error")
+# plt.clf()
+# plt.plot(iter_list, rmses)
+# plt.xlabel("iterations")
+# plt.ylabel("rms error")
     
     
 
