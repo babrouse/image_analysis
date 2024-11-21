@@ -1,7 +1,9 @@
-from skimage.morphology import (erosion, dilation, disk, closing, opening)
-from skimage import io, filters, morphology
 import matplotlib.pyplot as plt
 import numpy as np
+
+from skimage.morphology import (erosion, dilation, disk, closing, opening)
+from skimage import io, filters, morphology, segmentation
+from scipy import ndimage
 
 def renormalize_img(img):
     img_max = np.max(img)
@@ -14,6 +16,10 @@ def renormalize_img(img):
     img = C.astype(np.uint8)
     
     return img
+
+
+# was running into dpi issues only on this pc ugh (work pc)
+plt.figure(dpi=300)
 
 
 # img_gray = io.imread('images/Lichtenstein_imageDuplicator_1963_gray.png')
@@ -64,11 +70,146 @@ def renormalize_img(img):
 
 
 
-################################################
-# Prob 2a
+# ################################################
+# # Prob 2a
 
-# was running into dpi issues only on this pc ugh
-plt.figure(dpi=300)
+# petri_img = io.imread("images/dsc_0357_gray.png")
+
+# # apply a gaussian
+# gauss_img = filters.gaussian(petri_img, sigma=55)*255
+
+# # apply a highpass filter
+# hp_img = petri_img - gauss_img
+
+# # normalize
+# hp_img = renormalize_img(hp_img)
+
+
+# # plt.hist(hp_img.ravel(), bins=256, edgecolor='black', linewidth=0.5)
+# # plt.imshow(hp_img, cmap='gray')
+
+# # set some threshold boundary to get rid of the lesser intensity things
+# thresh = 150
+
+# thresh_img = hp_img.copy()
+# thresh_img[thresh_img < thresh] = 0
+
+# # make black and white
+# bw_img = np.where(thresh_img > 0, 1, 0).astype(np.uint8)
+
+# plt.imshow(bw_img, cmap='gray')
+
+
+
+
+
+# ################################################
+# # Prob 2b
+
+# from skimage import measure as skmeasure
+# label_img = skmeasure.label(bw_img) # label connected pixels
+# stats = skmeasure.regionprops(label_img) # stats on the object
+
+# # Region properties
+# label_img = skmeasure.label(bw_img)
+# stats = skmeasure.regionprops(label_img)
+# # Plot properties of threshold-segmented regions
+# areas = [stats[j]['Area'] for j in range(len(stats))]
+# eccentricities = [stats[j]['Eccentricity'] for j in range(len(stats))]
+
+# # plotting
+# plt.figure(figsize=(8, 6))
+# plt.scatter(eccentricities, areas, color='purple')
+# plt.xscale('log')
+
+# plt.xlabel('Areas (log)')
+# plt.ylabel('Eccentricities')
+# plt.title('Eccentricites vs log(Areas)')
+# plt.grid(True, which='both', linestyle='--', linewidth=0.3)
+# plt.show()
+
+
+
+
+
+# ################################################
+# Prob 3
+
+# sobel_x = np.array([[2, 1, 0, -1, -2],
+#                     [3, 2, 0, -2, -3],
+#                     [4, 3, 0, -3, -4], 
+#                     [3, 2, 0, -2, -3], 
+#                     [2, 1, 0, -1, -2]])
+
+# sobel_y = np.array([[2, 3, 4, 3, 2], 
+#                     [1, 2, 3, 2, 1], 
+#                     [0, 0, 0, 0, 0], 
+#                     [-1, -2, -3, -2, -1], 
+#                     [-2, -3, -4, -3, -2]])
+
+# petri_img = io.imread("images/dsc_0357_gray.png")
+
+# # apply a gaussian
+# gauss_img = filters.gaussian(petri_img, sigma=55)*255
+
+# # apply a highpass filter
+# hp_img = petri_img - gauss_img
+
+# # normalize
+# hp_img = renormalize_img(hp_img)
+# hp_img = hp_img / 255
+
+# img_sobel_x = ndimage.convolve(hp_img, sobel_x)
+# img_sobel_y = ndimage.convolve(hp_img, sobel_y)
+
+# gradient_img = np.sqrt(img_sobel_x**2 + img_sobel_y**2)
+
+# plt.imshow(gradient_img)
+
+
+
+
+
+# ###############################################
+# Prob 4
+
+# sobel_x = np.array([[2, 1, 0, -1, -2],
+#                     [3, 2, 0, -2, -3],
+#                     [4, 3, 0, -3, -4], 
+#                     [3, 2, 0, -2, -3], 
+#                     [2, 1, 0, -1, -2]])
+
+# sobel_y = np.array([[2, 3, 4, 3, 2], 
+#                     [1, 2, 3, 2, 1], 
+#                     [0, 0, 0, 0, 0], 
+#                     [-1, -2, -3, -2, -1], 
+#                     [-2, -3, -4, -3, -2]])
+
+# petri_img = io.imread("images/dsc_0357_gray.png")
+
+# # apply a gaussian
+# gauss_img = filters.gaussian(petri_img, sigma=55)*255
+
+# # apply a highpass filter
+# hp_img = petri_img - gauss_img
+
+# # normalize
+# hp_img = renormalize_img(hp_img)
+# hp_img = hp_img / 255
+
+# img_sobel_x = ndimage.convolve(hp_img, sobel_x)
+# img_sobel_y = ndimage.convolve(hp_img, sobel_y)
+
+# gradient_img = np.sqrt(img_sobel_x**2 + img_sobel_y**2)
+
+# watershed_img = segmentation.watershed(gradient_img)
+# plt.figure()
+# plt.imshow(watershed_img, cmap='prism')
+
+
+
+###############################################
+# Prob 5
 
 petri_img = io.imread("images/dsc_0357_gray.png")
 
@@ -81,37 +222,7 @@ hp_img = petri_img - gauss_img
 # normalize
 hp_img = renormalize_img(hp_img)
 
-
-# plt.hist(hp_img.ravel(), bins=256, edgecolor='black', linewidth=0.5)
-# plt.imshow(hp_img, cmap='gray')
-
-# set some threshold boundary to get rid of the lesser intensity things
-thresh = 150
-
-thresh_img = hp_img.copy()
-thresh_img[thresh_img < thresh] = 0
-
-# make black and white
-bw_img = np.where(thresh_img > 0, 1, 0).astype(np.uint8)
-
-# plt.imshow(bw_img, cmap='gray')
-
-
-
-
-
-################################################
-# Prob 2b
-
-from skimage import measure as skmeasure
-label_img = skmeasure.label(bw_img) # label connected pixels
-stats = skmeasure.regionprops(label_img) # stats on the object
-
-
-
-
-
-
+plt.imshow(hp_img, cmap='gray')
 
 
 
