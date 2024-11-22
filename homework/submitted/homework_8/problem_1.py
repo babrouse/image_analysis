@@ -24,13 +24,13 @@ def renormalize_img(img):
 plt.figure(dpi=300)
 
 
-img_gray = io.imread('images/Lichtenstein_imageDuplicator_1963_gray.png')
-img_color = io.imread('images/Lichtenstein_imageDuplicator_1963.png')
+# img_gray = io.imread('images/Lichtenstein_imageDuplicator_1963_gray.png')
+# img_color = io.imread('images/Lichtenstein_imageDuplicator_1963.png')
 
-# plt.imshow(img_gray, cmap='gray')
-# plt.imshow(img_color)
+# # plt.imshow(img_gray, cmap='gray')
+# # plt.imshow(img_color)
 
-selem = disk(3)
+# selem = disk(3)
 
 # img_closed = closing(img_gray, selem)
 # img_dilated = dilation(img_gray, selem)
@@ -39,23 +39,23 @@ selem = disk(3)
 
 # plt.imshow(img_opened, cmap='gray')
 
-# closing and dilated are similar while erosion and opening are similar
-# all of them remove dots, the first two mess with letters and the second two
-# darken the face quite a bit (washing it all out)
+# # closing and dilated are similar while erosion and opening are similar
+# # all of them remove dots, the first two mess with letters and the second two
+# # darken the face quite a bit (washing it all out)
 
-red_channel = img_color[:, :, 0]
-green_channel = img_color[:, :, 1]
-blue_channel = img_color[:, :, 2]
+# red_channel = img_color[:, :, 0]
+# green_channel = img_color[:, :, 1]
+# blue_channel = img_color[:, :, 2]
 
-red_mask = (red_channel > 150) & (green_channel < 100) & (blue_channel < 100)
-large_mask = dilation(red_mask, disk(1))
+# red_mask = (red_channel > 150) & (green_channel < 100) & (blue_channel < 100)
+# large_mask = dilation(red_mask, disk(1))
 
-# plt.imshow(red_mask)
+# # plt.imshow(red_mask)
 
-img_removed = img_color.copy()
-img_removed[large_mask] = [0, 0, 0]
+# img_removed = img_color.copy()
+# img_removed[large_mask] = [0, 0, 0]
 
-plt.imshow(img_removed)
+# plt.imshow(img_removed)
 
 
 
@@ -82,7 +82,10 @@ plt.imshow(img_removed)
 # hp_img = renormalize_img(hp_img)
 
 
-# # plt.hist(hp_img.ravel(), bins=256, edgecolor='black', linewidth=0.5)
+# plt.hist(hp_img.ravel(), bins=256, edgecolor='black', linewidth=0.5)
+# plt.xlabel('Intensity')
+# plt.ylabel('Frequency')
+# plt.title('')
 # # plt.imshow(hp_img, cmap='gray')
 
 # # set some threshold boundary to get rid of the lesser intensity things
@@ -166,41 +169,41 @@ plt.imshow(img_removed)
 
 
 
-# # ###############################################
-# # Prob 4
+# ###############################################
+# Prob 4
 
-# sobel_x = np.array([[2, 1, 0, -1, -2],
-#                     [3, 2, 0, -2, -3],
-#                     [4, 3, 0, -3, -4], 
-#                     [3, 2, 0, -2, -3], 
-#                     [2, 1, 0, -1, -2]])
+sobel_x = np.array([[2, 1, 0, -1, -2],
+                    [3, 2, 0, -2, -3],
+                    [4, 3, 0, -3, -4], 
+                    [3, 2, 0, -2, -3], 
+                    [2, 1, 0, -1, -2]])
 
-# sobel_y = np.array([[2, 3, 4, 3, 2], 
-#                     [1, 2, 3, 2, 1], 
-#                     [0, 0, 0, 0, 0], 
-#                     [-1, -2, -3, -2, -1], 
-#                     [-2, -3, -4, -3, -2]])
+sobel_y = np.array([[2, 3, 4, 3, 2], 
+                    [1, 2, 3, 2, 1], 
+                    [0, 0, 0, 0, 0], 
+                    [-1, -2, -3, -2, -1], 
+                    [-2, -3, -4, -3, -2]])
 
-# petri_img = io.imread("images/dsc_0357_gray.png")
+petri_img = io.imread("images/dsc_0357_gray.png")
 
-# # apply a gaussian
-# gauss_img = filters.gaussian(petri_img, sigma=55)*255
+# apply a gaussian
+gauss_img = filters.gaussian(petri_img, sigma=55)*255
 
-# # apply a highpass filter
-# hp_img = petri_img - gauss_img
+# apply a highpass filter
+hp_img = petri_img - gauss_img
 
-# # normalize
-# hp_img = renormalize_img(hp_img)
-# hp_img = hp_img / 255
+# normalize
+hp_img = renormalize_img(hp_img)
+hp_img = hp_img / 255
 
-# img_sobel_x = ndimage.convolve(hp_img, sobel_x)
-# img_sobel_y = ndimage.convolve(hp_img, sobel_y)
+img_sobel_x = ndimage.convolve(hp_img, sobel_x)
+img_sobel_y = ndimage.convolve(hp_img, sobel_y)
 
-# gradient_img = np.sqrt(img_sobel_x**2 + img_sobel_y**2)
+gradient_img = np.sqrt(img_sobel_x**2 + img_sobel_y**2)
 
-# # watershed_img = segmentation.watershed(gradient_img)
-# # plt.figure()
-# # plt.imshow(watershed_img, cmap='prism')
+watershed_img = segmentation.watershed(gradient_img)
+plt.figure()
+plt.imshow(watershed_img, cmap='prism')
 
 
 
