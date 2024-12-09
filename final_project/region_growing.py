@@ -87,11 +87,12 @@ monarch_png = 'monarch.png'
 
 # pick a seed point and set the threshold
 # seed_pt = (200, 300) # Laney Blind 1
-seed_pt = (300, 300) # Laney Blind 2
+# seed_pt = (300, 300) # Laney Blind 2
 # seed_pt = (630, 410) # Laney Heart 1
 # seed_pt = (700, 450) # Laney Heart 2
-# seed_pt = (375, 1250)
-thresh = 50
+seed_pt = (375, 1250) # Neuron
+# seed_pt = (200, 160)    # Astronaut
+thresh = 30.0
 
 
 # Execution
@@ -99,9 +100,9 @@ thresh = 50
 # read in img
 # img = img_read(imgs_folder, laney_jpg)    # laney imp
 # img = img_read(imgs_folder, bobby_jpg)    # bobby imp
-# img = img_read(imgs_folder, neuro_tif)    # neuron imp
+img = img_read(imgs_folder, neuro_tif)    # neuron imp
 # img = img_read(imgs_folder, monarch_png)  # monarch imp (testing)
-img = data.astronaut()                      # astronaut
+# img = data.astronaut()                    # astronaut
 
 # plt.imshow(img)
 
@@ -113,17 +114,17 @@ bnds =  segmentation.mark_boundaries(img, seg_mask, color=(0, 1, 1))
 
 
 plt.figure(dpi=300)
-plt.title(f'Seed value = {img[seed_pt[0], seed_pt[1]]}')
+plt.title(f'Seed value = {img[seed_pt[1], seed_pt[0]]}')
 plt.axis('off')
 
 plt.plot(seed_pt[0], seed_pt[1], 'o', color='red', markersize=3.7)
 plt.imshow(bnds)
 
-plt.savefig(save_path + 'laney_blind_2.png')
+plt.savefig(save_path + 'neuron_30.png')
 
-print(img[seed_pt[0], seed_pt[1]])
+# print(img[seed_pt[1], seed_pt[0]])
 
-
+# print(img[160, 200])
 
 
 

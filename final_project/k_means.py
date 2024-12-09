@@ -50,7 +50,7 @@ monarch_png = 'monarch.png'
 # k-means variables
 iterations = 100   # number of iterations to end at
 epsilon = 0.85     # 'distance' threshold
-k = 20              # number of clusters
+k = 3              # number of clusters
 
 # Execution
 ######################################################################
@@ -65,7 +65,7 @@ plt.figure(dpi=300)
 plt.title('original')
 plt.imshow(img)
 plt.axis('off')
-plt.savefig(save_path + 'neuron.png')
+# plt.savefig(save_path + 'neuron.png')
 
 # plt.imshow(img)
 
@@ -77,7 +77,7 @@ pixel_vals = np.float32(pixel_vals)
 crit = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, iterations, epsilon)
 
 # Run k-means algorithm
-retval, labels, centers = cv2.kmeans(pixel_vals, k, None, crit, 10, cv2.KMEANS_PP_CENTERS)
+retval, labels, centers = cv2.kmeans(pixel_vals, k, None, crit, 10, cv2.KMEANS_RANDOM_CENTERS)
 """ Words on line 73
     Assignments:
         retval: sum of squared distances from each point of data to centroid
