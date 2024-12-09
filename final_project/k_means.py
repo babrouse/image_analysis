@@ -11,9 +11,9 @@ import numpy as np
 import cv2
 
 from skimage import segmentation
+from skimage.data import astronaut
 
-# Set dpi for all figures ahead of time
-plt.figure(dpi=300)
+
 
 
 
@@ -37,8 +37,9 @@ def img_read(path, filename):
 
 # Variables
 ######################################################################
-# path
+# paths
 imgs_folder = 'images/'
+save_path = 'images/pres_images/'
 
 # images
 laney_jpg = 'laney.jpg'
@@ -48,16 +49,23 @@ monarch_png = 'monarch.png'
 
 # k-means variables
 iterations = 100   # number of iterations to end at
-epsilon = 0.50     # 'distance' threshold
-k = 2              # number of clusters
+epsilon = 0.85     # 'distance' threshold
+k = 20              # number of clusters
 
 # Execution
 ######################################################################
 # read in img
-img = img_read(imgs_folder, laney_jpg)    # laney imp
+# img = img_read(imgs_folder, laney_jpg)    # laney imp
 # img = img_read(imgs_folder, bobby_jpg)    # bobby imp
-# img = img_read(imgs_folder, neuro_tif)    # neuron imp
+img = img_read(imgs_folder, neuro_tif)    # neuron imp
 # img = img_read(imgs_folder, monarch_png)  # monarch imp (testing)
+# img = astronaut()                         # astronaut
+
+plt.figure(dpi=300)
+plt.title('original')
+plt.imshow(img)
+plt.axis('off')
+plt.savefig(save_path + 'neuron.png')
 
 # plt.imshow(img)
 
@@ -96,7 +104,12 @@ seg_img = seg_data.reshape((img.shape))
 labels_reshaped = labels.reshape((img.shape[0], img.shape[1]))
 bnd_img = segmentation.mark_boundaries(seg_img, labels_reshaped, color=(0, 1, 1))
 
-plt.imshow(bnd_img)
+plt.figure(dpi=300)
+plt.title('k = 20 clusters')
+plt.axis('off')
+plt.imshow(seg_img)
+
+# plt.savefig(save_path + 'astro_k20_nobnds.png')
 
 # plt.hist(pixel_vals[pixel_vals > 5], bins=256, linewidth=0.0, edgecolor='black', color='purple')
 

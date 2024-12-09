@@ -12,10 +12,9 @@ import cv2
 
 from skimage import segmentation
 from collections import deque
+from skimage import data
 # from skimage import segmentation, io, color, img_as_float
 
-# Set dpi for all figures ahead of time
-plt.figure(dpi=300)
 
 
 
@@ -76,8 +75,9 @@ def img_read(path, filename):
     
 # Variables
 ######################################################################
-# path
+# paths
 imgs_folder = 'images/'
+save_path = 'images/pres_images/'
 
 # images
 laney_jpg = 'laney.jpg'
@@ -86,8 +86,12 @@ neuro_tif = 'bk_ch00.tif'
 monarch_png = 'monarch.png'
 
 # pick a seed point and set the threshold
-seed_pt = (400, 1250)
-thresh = 20.0
+# seed_pt = (200, 300) # Laney Blind 1
+seed_pt = (300, 300) # Laney Blind 2
+# seed_pt = (630, 410) # Laney Heart 1
+# seed_pt = (700, 450) # Laney Heart 2
+# seed_pt = (375, 1250)
+thresh = 50
 
 
 # Execution
@@ -95,10 +99,11 @@ thresh = 20.0
 # read in img
 # img = img_read(imgs_folder, laney_jpg)    # laney imp
 # img = img_read(imgs_folder, bobby_jpg)    # bobby imp
-img = img_read(imgs_folder, neuro_tif)    # neuron imp
+# img = img_read(imgs_folder, neuro_tif)    # neuron imp
 # img = img_read(imgs_folder, monarch_png)  # monarch imp (testing)
+img = data.astronaut()                      # astronaut
 
-plt.imshow(img)
+# plt.imshow(img)
 
 # apply the region growing algorithm
 seg_mask = region_growing(img, seed_pt, thresh)
@@ -106,8 +111,17 @@ seg_mask = region_growing(img, seed_pt, thresh)
 # use mask to show boundaries
 bnds =  segmentation.mark_boundaries(img, seg_mask, color=(0, 1, 1))
 
+
+plt.figure(dpi=300)
+plt.title(f'Seed value = {img[seed_pt[0], seed_pt[1]]}')
+plt.axis('off')
+
 plt.plot(seed_pt[0], seed_pt[1], 'o', color='red', markersize=3.7)
 plt.imshow(bnds)
+
+plt.savefig(save_path + 'laney_blind_2.png')
+
+print(img[seed_pt[0], seed_pt[1]])
 
 
 
