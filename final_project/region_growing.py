@@ -48,17 +48,19 @@ def region_growing(img, seed, threshold):
             (0, 1), (1, -1), (1, 0), (1, 1)]
     
     while queue:
-        x, y = queue.popleft()
+        x, y = queue.popleft() # pop the next pixel to check
         
-        for dx, dy in bros:
-            nx, ny = x + dx, y + dy
+        for dx, dy in bros: # iterate through surrounding pixels
+            nx, ny = x + dx, y + dy # new x and new y 
             
-            # check if neighbor is within bounds
+            # check if neighbor is within bounds of image and not already segmented
             if 0 <= nx < width and 0 <= ny < height and not segged[ny, nx]:
                 
-                # calculate the pixel similarity
+                # calculate the pixel similarity ('distance')
                 r = np.linalg.norm(img[ny, nx] - seed_pt)
                 
+                # if distance sufficiently small, indicate in the mask array that
+                # the pixel is part of the mask (assign 1 instead of 0)
                 if r < threshold:
                     segged[ny, nx] = 1
                     queue.append((nx, ny))
@@ -86,11 +88,11 @@ neuro_tif = 'bk_ch00.tif'
 monarch_png = 'monarch.png'
 
 # pick a seed point and set the threshold
-# seed_pt = (200, 300) # Laney Blind 1
+seed_pt = (200, 300) # Laney Blind 1
 # seed_pt = (300, 300) # Laney Blind 2
 # seed_pt = (630, 410) # Laney Heart 1
 # seed_pt = (700, 450) # Laney Heart 2
-seed_pt = (375, 1250) # Neuron
+# seed_pt = (375, 1250) # Neuron
 # seed_pt = (200, 160)    # Astronaut
 thresh = 30.0
 
@@ -98,9 +100,9 @@ thresh = 30.0
 # Execution
 ######################################################################
 # read in img
-# img = img_read(imgs_folder, laney_jpg)    # laney imp
+img = img_read(imgs_folder, laney_jpg)    # laney imp
 # img = img_read(imgs_folder, bobby_jpg)    # bobby imp
-img = img_read(imgs_folder, neuro_tif)    # neuron imp
+# img = img_read(imgs_folder, neuro_tif)    # neuron imp
 # img = img_read(imgs_folder, monarch_png)  # monarch imp (testing)
 # img = data.astronaut()                    # astronaut
 
@@ -120,7 +122,7 @@ plt.axis('off')
 plt.plot(seed_pt[0], seed_pt[1], 'o', color='red', markersize=3.7)
 plt.imshow(bnds)
 
-plt.savefig(save_path + 'neuron_30.png')
+# plt.savefig(save_path + 'neuron_30.png')
 
 # print(img[seed_pt[1], seed_pt[0]])
 

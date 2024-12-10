@@ -55,10 +55,10 @@ k = 3              # number of clusters
 # Execution
 ######################################################################
 # read in img
-# img = img_read(imgs_folder, laney_jpg)    # laney imp
-# img = img_read(imgs_folder, bobby_jpg)    # bobby imp
-img = img_read(imgs_folder, neuro_tif)    # neuron imp
-# img = img_read(imgs_folder, monarch_png)  # monarch imp (testing)
+# img = img_read(imgs_folder, laney_jpg)    # laney
+# img = img_read(imgs_folder, bobby_jpg)    # bobby
+img = img_read(imgs_folder, neuro_tif)    # neuron
+# img = img_read(imgs_folder, monarch_png)  # monarch (testing)
 # img = astronaut()                         # astronaut
 
 plt.figure(dpi=300)
